@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For Mrinal, Something Special</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a1238;--panel:#101a4a;--blue:#4169e1;--blue-d:#1c2f86;--maroon:#9b2a52;--maroon-d:#4d1128;--rose:#e0568a;--text:#eef1ff;--mute:#8d97c2;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.7 "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace}
+.px{font-family:"Press Start 2P","Courier New",monospace;line-height:1.7}
+:focus-visible{outline:3px solid var(--rose);outline-offset:3px}
+button{font:inherit;background:var(--blue);color:#fff;border:0;padding:12px 20px;cursor:pointer;box-shadow:5px 5px 0 var(--maroon-d);touch-action:manipulation}
+button:hover{background:#5a7df0}button:active,button.hold{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--maroon-d)}
+canvas{display:block}
+/* lock */
+#lock{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:var(--bg);padding:20px}
+#lock.gone{display:none}
+#rain{position:absolute;inset:0;width:100%;height:100%}
+.term{position:relative;width:min(560px,100%);background:rgba(12,20,64,.94);border:3px solid var(--blue);box-shadow:10px 10px 0 var(--maroon-d)}
+.bar{display:flex;gap:7px;padding:10px 14px;background:var(--blue-d)}.bar i{width:11px;height:11px;background:var(--rose)}
+.tb{padding:26px}.tb p{margin:0 0 12px}.dim{color:var(--mute)}
+.row{display:flex;gap:12px;align-items:center;margin-top:20px}
+.row input{flex:1;min-width:0;background:transparent;border:0;border-bottom:3px solid var(--blue);color:var(--text);font:inherit;font-size:20px;padding:6px 2px;letter-spacing:.18em}
+.row input:focus{outline:none;border-color:var(--rose)}
+.shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(-9px)}50%{transform:translateX(9px)}75%{transform:translateX(-5px)}}
+/* site */
+#site{display:none}#site.on{display:block}
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:space-between;padding:12vh 6vw 7vh;overflow:hidden}
+#world{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero>*:not(#world){position:relative;z-index:1}
+.hero h1{margin:0;font-size:clamp(20px,5.2vw,58px);text-shadow:5px 5px 0 var(--maroon-d)}
+.hero h1 b{display:block;color:var(--blue);margin-top:.5em;font-size:1.5em;font-weight:400;text-shadow:6px 6px 0 #0b1a5c}
+.sub{max-width:46ch;color:#c9d1f5;min-height:5.1em;text-shadow:0 2px 8px #000}
+.count{display:flex;flex-wrap:wrap;gap:12px}
+.count div{background:rgba(10,18,56,.8);border:3px solid var(--blue);padding:12px 18px;min-width:92px;box-shadow:5px 5px 0 var(--maroon-d)}
+.count strong{display:block;font-size:28px}.count small{color:var(--mute)}
+.scroll{color:var(--mute);margin-top:18px;display:block}
+.sec{position:relative;max-width:980px;margin:0 auto;padding:110px 24px}
+.sec h2{font-size:clamp(14px,2.6vw,24px);margin:0 0 14px}
+.lead{color:var(--mute);max-width:56ch;margin:0 0 48px}
+.strip{height:18px;margin:0 auto;max-width:980px;background:repeating-linear-gradient(90deg,var(--blue) 0 18px,var(--blue-d) 18px 36px,var(--maroon) 36px 54px,var(--maroon-d) 54px 72px)}
+/* story */
+.ev{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:28px;align-items:center;background:var(--panel);border:3px solid var(--blue-d);box-shadow:8px 8px 0 var(--maroon-d);padding:28px;margin-bottom:36px;opacity:0;transform:translateX(-40px);transition:opacity .7s,transform .7s}
+.ev:nth-child(even){border-color:var(--maroon);box-shadow:8px 8px 0 var(--blue-d)}
+.ev.in{opacity:1;transform:none}
+.ev time{font-size:clamp(14px,2vw,20px);color:var(--blue)}
+.ev:nth-child(even) time{color:var(--rose)}
+.ev h3{margin:0 0 8px;font-size:19px}.ev p{margin:0;color:var(--mute)}
+/* heartbeat */
+.beat{position:relative;border:3px solid var(--blue);background:#0c1544;box-shadow:10px 10px 0 var(--maroon-d);overflow:hidden}
+#ecg{width:100%;height:300px}
+.hud{position:absolute;left:18px;top:14px;right:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.hud span{color:var(--mute);font-size:13px}.hud b{color:var(--text)}
+.beatbtn{margin-top:28px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+/* cake */
+.badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:28px}.bd{background:var(--panel);border:3px solid var(--blue-d);box-shadow:8px 8px 0 var(--maroon-d);padding:26px}.bd:nth-child(even){border-color:var(--maroon);box-shadow:8px 8px 0 var(--blue-d)}.bd h3{margin:18px 0 6px;font-size:17px}.bd p{margin:0;color:var(--mute);font-size:14px}.ic{display:grid;grid-template-columns:repeat(5,12px);width:60px}.ic i{width:12px;height:12px}.ic i.on{background:var(--blue)}.bd:nth-child(even) .ic i.on{background:var(--rose)}.rv{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s}.rv.in{opacity:1;transform:none}
+.cakewrap{display:flex;gap:40px;align-items:center;flex-wrap:wrap}
+#cake{width:min(300px,70vw);cursor:pointer;filter:drop-shadow(0 0 26px rgba(65,105,225,.35))}
+.fl{animation:fl .5s steps(2) infinite}.fl:nth-child(2n){animation-delay:.2s}@keyframes fl{50%{transform:translateY(-2px)}}
+.out .fl{display:none}
+#wish{min-height:3.4em;color:var(--rose)}
+/* term + letter */
+.shell{background:var(--panel);border:3px solid var(--blue-d);box-shadow:8px 8px 0 var(--maroon-d)}
+#out{padding:20px;min-height:170px;max-height:320px;overflow:auto;white-space:pre-wrap}#out .c{color:var(--blue)}
+.cmd{display:flex;gap:10px;padding:12px 20px;border-top:3px solid var(--blue-d)}.cmd span{color:var(--rose)}
+.cmd input{flex:1;min-width:0;background:transparent;border:0;color:var(--text);font:inherit}.cmd input:focus{outline:none}
+.letter{background:var(--panel);border:3px solid var(--maroon);padding:36px;box-shadow:10px 10px 0 var(--blue-d);max-width:64ch}
+.letter p{margin:0 0 18px}
+footer{text-align:center;padding:40px 24px 80px;color:var(--mute)}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:30}
+[hidden]{display:none!important}
+#boot{position:fixed;inset:0;z-index:25;background:var(--bg);display:grid;place-items:center;padding:24px;cursor:pointer}
+.bt{width:min(560px,100%)}#bl{min-height:8.5em;white-space:pre-line;color:var(--blue)}
+.pbar{height:18px;border:3px solid var(--blue);margin-top:18px}.pbar b{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,var(--blue) 0 12px,var(--maroon) 12px 24px);transition:width 3.2s linear}
+.sp{position:fixed;width:6px;height:6px;pointer-events:none;z-index:15;animation:spk .8s forwards}@keyframes spk{to{opacity:0;transform:translateY(16px) scale(.3)}}
+.lp{opacity:0;transform:translateY(12px);transition:opacity 1s,transform 1s}.lp.on{opacity:1;transform:none}
+:root{--cur:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='28' viewBox='0 0 12 14' shape-rendering='crispEdges'%3E%3Cpolygon points='1,1 1,12 4,9 6,13 8,12 6,8 10,8' fill='%234169e1' stroke='%23eef1ff' stroke-width='1'/%3E%3C/svg%3E") 2 2;--cur2:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='28' viewBox='0 0 12 14' shape-rendering='crispEdges'%3E%3Cpolygon points='1,1 1,12 4,9 6,13 8,12 6,8 10,8' fill='%23e0568a' stroke='%23eef1ff' stroke-width='1'/%3E%3C/svg%3E") 2 2}
+html,body{cursor:var(--cur),auto}button,a,[role=button]{cursor:var(--cur2),pointer}#cake,#boot{cursor:var(--cur2),pointer}input{cursor:text}
+.notes{list-style:none;margin:0;padding:24px}.notes li{padding:6px 0}.notes b{color:var(--blue);font-weight:600}.notes .f b{color:var(--rose)}
+@media(max-width:640px){.ev{grid-template-columns:1fr;gap:12px}.tb{padding:20px}}
+@media(prefers-reduced-motion:reduce){.lp,.sp{opacity:1;transform:none;transition:none}.rv{opacity:1;transform:none;transition:none}.fl{animation:none}.ev{opacity:1;transform:none;transition:none}.shake{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+
+<div id="lock">
+  <canvas id="rain"></canvas>
+  <div class="term">
+    <div class="bar"><i></i><i></i><i></i></div>
+    <div class="tb">
+      <p class="px" style="font-size:13px">ACCESS RESTRICTED</p>
+      <p class="dim">Owner: Pagal. Everyone else, please look away.</p>
+      <p>Passcode: <b>your birthday</b></p>
+      <p class="dim">Format: DDMMYYYY (8 digits, no slashes or spaces)</p>
+      <div class="row"><input id="pw" type="password" inputmode="numeric" maxlength="12" autocomplete="off" aria-label="Passcode in DDMMYYYY format" placeholder="DDMMYYYY"><button id="go">Unlock</button></div>
+      <p id="msg" style="color:var(--rose);min-height:1.7em;margin:14px 0 0" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<div id="boot" hidden><div class="bt"><p class="px" id="bl" style="font-size:11px"></p><div class="pbar"><b id="pb"></b></div></div></div>
+
+<main id="site">
+  <header class="hero">
+    <canvas id="world" aria-hidden="true"></canvas>
+    <div>
+      <h1 class="px">Happy birthday,<b>Pagal.</b></h1>
+      <p class="sub" id="sub"></p>
+    </div>
+    <div>
+      <div class="count" id="count"></div>
+      <a class="scroll" href="#story" style="color:var(--mute)">Scroll down, the story is below</a>
+    </div>
+  </header>
+
+  <div class="strip" aria-hidden="true"></div>
+  <section class="sec" id="story">
+    <h2 class="px">The log of us</h2>
+    <p class="lead">Four moments I would save before anything else.</p>
+    <div class="ev"><time class="px">19 Sep 2025</time><div><h3>First sighting</h3><p>An NPTEL seminar. I did not know yet that I had just met someone who would become my best friend.</p></div></div>
+    <div class="ev"><time class="px">30 Jan 2026</time><div><h3>Karunamoyee Book Fair</h3><p>Our first time going out together. We wandered between shelves for hours, and honestly talked more than we read.</p></div></div>
+    <div class="ev"><time class="px">24 Mar 2026</time><div><h3>The Uber shuttle</h3><p>A quiet ride where I felt so comfortable that silence was easy. That is when I knew this friendship is the real thing.</p></div></div>
+    <div class="ev"><time class="px">A rainy day</time><div><h3>A rainy day</h3><p>I forgot the date, but I will never forget the rain and how we got completely soaked together. Some days just stay with you. Try the little scene below.</p></div></div>
+  </section>
+
+  <div class="strip" aria-hidden="true"></div>
+  <section class="sec">
+    <h2 class="px">One rainy day</h2>
+    <p class="lead">Two paths, one rainy day. Press and hold the button to bring them together.</p>
+    <div class="beat"><canvas id="ecg"></canvas><div class="hud"><span>Paths: <b id="st">apart</b></span><span>Together: <b id="pc">0%</b></span></div></div>
+    <div class="beatbtn"><button id="hold" class="px" style="font-size:12px">Hold to walk together</button><span class="dim" id="hint">Hold it with mouse, touch, or the space bar.</span></div>
+  </section>
+
+  <div class="strip" aria-hidden="true"></div>
+  <section class="sec">
+    <h2 class="px">Make a wish</h2>
+    <p class="lead">Click the candles. Wish for something big.</p>
+    <div class="cakewrap">
+      <svg id="cake" viewBox="0 0 120 100" shape-rendering="crispEdges" role="button" tabindex="0" aria-label="Birthday cake, click to blow out the candles">
+        <rect x="8" y="88" width="104" height="6" fill="#1c2f86"/>
+        <rect x="18" y="60" width="84" height="28" fill="#8e1f45"/><rect x="18" y="60" width="84" height="6" fill="#e0568a"/>
+        <rect x="18" y="72" width="8" height="6" fill="#e0568a"/><rect x="50" y="74" width="8" height="6" fill="#e0568a"/><rect x="86" y="72" width="8" height="6" fill="#e0568a"/>
+        <rect x="30" y="38" width="60" height="22" fill="#4169e1"/><rect x="30" y="38" width="60" height="6" fill="#9db3ff"/>
+        <g fill="#eef1ff"><rect x="42" y="24" width="4" height="14"/><rect x="58" y="24" width="4" height="14"/><rect x="74" y="24" width="4" height="14"/></g>
+        <g fill="#ffb84d"><rect class="fl" x="42" y="16" width="4" height="8"/><rect class="fl" x="58" y="16" width="4" height="8"/><rect class="fl" x="74" y="16" width="4" height="8"/></g>
+      </svg>
+      <div style="flex:1;min-width:240px"><button id="blow">Blow out the candles</button><p id="wish" class="px" style="font-size:12px;margin-top:22px" aria-live="polite"></p></div>
+    </div>
+  </section>
+
+  <div class="strip" aria-hidden="true"></div>
+  <section class="sec">
+    <h2 class="px">Badges unlocked</h2>
+    <p class="lead">Four things that are simply true about you.</p>
+    <div class="badges" id="badges"></div>
+  </section>
+  <div class="strip" aria-hidden="true"></div>
+  <section class="sec">
+    <h2 class="px">A terminal, just for you</h2>
+    <p class="lead">You like breaking into things. Type <b>help</b>.</p>
+    <div class="shell"><div id="out" role="log" aria-live="polite"></div><div class="cmd"><span>pagal@home:~$</span><input id="cin" autocomplete="off" spellcheck="false" aria-label="Terminal command"></div></div>
+  </section>
+
+  <div class="strip" aria-hidden="true"></div>
+  <section class="sec">
+    <h2 class="px">Patch notes: version 22.04.2027</h2>
+    <p class="lead">Your yearly update is ready to install.</p>
+    <div class="shell"><ul class="notes">
+      <li><b>+ Added:</b> one more year of being awesome</li>
+      <li><b>+ Added:</b> zero-stress mode, activated on demand</li>
+      <li><b>+ Improved:</b> focus, patience, and a pinch of mischief</li>
+      <li class="f"><b>~ Fixed:</b> bugs in your code (we will not talk about deadlines)</li>
+      <li class="f"><b>~ Known issue:</b> you are still the best friend anyone could ask for, and this cannot be patched</li>
+    </ul></div>
+  </section>
+  <div class="strip" aria-hidden="true"></div>
+  <section class="sec">
+    <h2 class="px">message.txt</h2>
+    <div class="letter" style="margin-top:36px">
+      <p>Dear Pagal,</p>
+      <p>On 19 September 2025, I sat through an NPTEL seminar. I do not remember a single slide. I only remember that it was the day I met you.</p>
+      <p>Since then, you have become the person I can be completely myself with. The book fair, the quiet shuttle ride, a rainy day we both forgot to plan: you turned every ordinary moment into something I want to keep.</p>
+      <p>You work so hard, you stay so focused, and you are learning to protect the digital world. Today I wanted someone to protect your smile, so I spent months building this little world for you. I hope it reached you.</p>
+      <p>Whatever this year throws at you, I will be right here. May your code compile, your exams be kind, and your days be full of people who make you laugh the way you make me laugh.</p>
+      <p>Thank you for being you. Happy birthday, Pagal.</p>
+      <p class="dim">Your best friend,<br>Aditi</p>
+      
+    </div>
+  </section>
+  <footer><p class="px" style="font-size:12px;color:var(--text);margin:0 0 18px">No reply needed. Just know this was made for you.</p><p>Made with care, for you. No trackers, no ads, no photos. Just pixels and you.</p></footer>
+</main>
+
+<script>
+/* Nice try, hacker. The passcode is a date you know well. */
+const PASS="22042027",$=s=>document.querySelector(s),RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const pw=$("#pw"),msg=$("#msg");
+/* lock rain */
+const lc=$("#rain"),lx=lc.getContext("2d");let lrun=true,cols=[];
+function lsz(){lc.width=innerWidth;lc.height=innerHeight;cols=Array.from({length:Math.ceil(lc.width/18)},()=>Math.random()*lc.height/18)}
+lsz();addEventListener("resize",lsz);
+function lr(){if(!lrun)return;lx.fillStyle="rgba(10,18,56,.14)";lx.fillRect(0,0,lc.width,lc.height);lx.font="16px monospace";
+cols.forEach((y,i)=>{lx.fillStyle=Math.random()<.05?"#e0568a":"#4169e1";lx.fillText(Math.random()<.5?"0":"1",i*18,y*18);cols[i]=y*18>lc.height&&Math.random()>.97?0:y+1});requestAnimationFrame(lr)}
+RM?(lx.fillStyle="#0b1230",lx.fillRect(0,0,lc.width,lc.height)):lr();
+function unlock(){
+  if(pw.value.replace(/\D/g,"")===PASS){lrun=false;$("#lock").classList.add("gone");$("#site").classList.add("on");scrollTo(0,0);start()}
+  else{msg.textContent="Wrong passcode. Format is DDMMYYYY, 8 digits.";const t=$(".term");t.classList.remove("shake");void t.offsetWidth;t.classList.add("shake");pw.select()}
+}
+$("#go").onclick=unlock;pw.onkeydown=e=>{if(e.key==="Enter")unlock()};
+
+/* hero world */
+const hc=$("#world"),hx=hc.getContext("2d"),B=10;let mx=0,T=0,stars=[],fl=[],vis=true,sh=null;
+function hsz(){const r=hc.getBoundingClientRect();hc.width=r.width;hc.height=r.height;
+stars=Array.from({length:120},()=>({x:Math.random()*hc.width,y:Math.random()*hc.height*.62,p:Math.random()*6}));
+fl=Array.from({length:34},()=>({x:Math.random()*hc.width,y:hc.height*(.55+Math.random()*.45),s:.15+Math.random()*.4,p:Math.random()*6}))}
+addEventListener("mousemove",e=>mx=e.clientX/innerWidth-.5);
+let lastS=0;addEventListener("mousemove",e=>{if(RM||Date.now()-lastS<40||!$("#site").classList.contains("on")||!$("#boot").hidden)return;lastS=Date.now();const s=document.createElement("i");s.className="sp";s.style.cssText=`left:${e.clientX}px;top:${e.clientY}px;background:${Math.random()<.5?"#4169e1":"#e0568a"}`;document.body.appendChild(s);setTimeout(()=>s.remove(),800)});
+function layer(base,amp,f,col,top,par,sd){const W=hc.width,H=hc.height,o=mx*par;
+for(let x=0;x<W;x+=B){const n=Math.sin((x+o)*f+sd)*amp+Math.sin((x+o)*f*2.3+sd)*amp*.4,y=Math.floor((base+n)/B)*B;
+hx.fillStyle=col;hx.fillRect(x,y,B+1,H-y);hx.fillStyle=top;hx.fillRect(x,y,B+1,B/2)}}
+function world(){const W=hc.width,H=hc.height;
+const g=hx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0a1238");g.addColorStop(.65,"#1c2d86");g.addColorStop(1,"#3d1237");hx.fillStyle=g;hx.fillRect(0,0,W,H);
+stars.forEach(s=>{hx.globalAlpha=.35+.65*Math.abs(Math.sin(T/45+s.p));hx.fillStyle="#fff";hx.fillRect(Math.round(s.x-mx*10),Math.round(s.y),2,2)});hx.globalAlpha=1;
+[[.15,.14,70],[.5,.22,100],[.88,.1,80]].forEach(([a,b,s],i)=>{const x=((a*W+T*.25*(i+1))%(W+200))-100,y=b*H;hx.fillStyle="rgba(120,140,235,.16)";for(let k=0;k<5;k++)hx.fillRect(Math.round(x+k*s/6),Math.round(y-(k%2?0:10)),s/5+4,16)});
+if(!sh&&Math.random()<.004)sh={x:Math.random()*W*.7,y:Math.random()*H*.3};if(sh){hx.fillStyle="#fff";for(let i=0;i<8;i++){hx.globalAlpha=1-i/8;hx.fillRect(Math.round(sh.x-i*9),Math.round(sh.y-i*4.5),4,4)}hx.globalAlpha=1;sh.x+=14;sh.y+=7;if(sh.x>W||sh.y>H*.6)sh=null}
+const cx=W*.76-mx*24,cy=H*.26,R=Math.min(60,W*.09),gl=hx.createRadialGradient(cx,cy,R*.5,cx,cy,R*3.2);gl.addColorStop(0,"rgba(224,86,138,.35)");gl.addColorStop(1,"rgba(224,86,138,0)");hx.fillStyle=gl;hx.fillRect(cx-R*4,cy-R*4,R*8,R*8);
+for(let dy=-R;dy<=R;dy+=6)for(let dx=-R;dx<=R;dx+=6)if(dx*dx+dy*dy<=R*R){hx.fillStyle=(dx+dy)%24===0&&dx<0?"#b23b6a":"#e8689c";hx.fillRect(Math.round(cx+dx),Math.round(cy+dy),6,6)}
+layer(H*.64,34,.004,"#1a2c80","#4169e1",40,1);layer(H*.75,28,.006,"#101d62","#2d4bb8",90,5);layer(H*.87,20,.009,"#090f38","#1f3585",160,9);
+fl.forEach(f=>{f.y-=f.s;if(f.y<H*.4)f.y=H;hx.globalAlpha=.4+.6*Math.abs(Math.sin(T/30+f.p));hx.fillStyle="#ff9ec4";hx.fillRect(Math.round(f.x+Math.sin(T/50+f.p)*8),Math.round(f.y),3,3)});hx.globalAlpha=1}
+
+/* heartbeat */
+const ec=$("#ecg"),ex=ec.getContext("2d");let off=.37,holding=false,drops=[];
+function esz(){ec.width=ec.clientWidth;ec.height=300;drops=Array.from({length:70},()=>({x:Math.random()*ec.width,y:Math.random()*300,l:8+Math.random()*14,s:3+Math.random()*4}))}
+function ecg(t){t=((t%1)+1)%1;const b=(a,z,h)=>h*Math.sin((t-a)/(z-a)*Math.PI);
+if(t>.18&&t<.24)return b(.18,.24,.18);if(t>.3&&t<.34)return b(.3,.34,-.25);if(t>=.34&&t<.4)return b(.34,.4,1);if(t>=.4&&t<.46)return b(.4,.46,-.4);if(t>.6&&t<.72)return b(.6,.72,.25);return 0}
+function beat(){const W=ec.width,H=ec.height,m=H/2+10;
+ex.fillStyle="#0c1544";ex.fillRect(0,0,W,H);ex.strokeStyle="rgba(65,105,225,.5)";ex.lineWidth=1;
+drops.forEach(d=>{d.y+=d.s;if(d.y>H){d.y=-20;d.x=Math.random()*W}ex.beginPath();ex.moveTo(d.x,d.y);ex.lineTo(d.x-2,d.y+d.l);ex.stroke()});
+off+=holding?-off*.012-.0006:(.37-off)*.004;off=Math.max(0,Math.min(.37,off));
+const sync=off<.012,sep=Math.min(1,off*7)*34,pct=Math.round((1-off/.37)*100);
+[[-1,"#4169e1",0],[1,"#e0568a",off]].forEach(([dir,col,o])=>{ex.beginPath();
+for(let x=0;x<=W;x+=3){const y=m+dir*sep-Math.sin((x/W*2.2-T*.004+o)*Math.PI*2)*38;x?ex.lineTo(x,y):ex.moveTo(x,y)}
+ex.strokeStyle=sync?"#fff":col;ex.lineWidth=sync?4:3;ex.shadowColor=sync?"#e0568a":col;ex.shadowBlur=sync?22:10;ex.stroke();ex.shadowBlur=0});
+$("#pc").textContent=pct+"%";$("#st").textContent=sync?"together":holding?"coming closer...":"apart";
+if(sync&&!beat.done){beat.done=true;$("#hint").textContent="Some days stay with you. That rainy one will always stay with me.";burst(innerWidth/2,innerHeight/2)}
+if(!sync)beat.done=false}
+const hb=$("#hold"),setH=v=>{holding=v;hb.classList.toggle("hold",v)};
+hb.onpointerdown=()=>setH(true);addEventListener("pointerup",()=>setH(false));
+hb.onkeydown=e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();setH(true)}};hb.onkeyup=()=>setH(false);
+
+/* confetti */
+const fc=$("#fx"),fx=fc.getContext("2d");let ps=[],frun=false;
+function burst(x,y){fc.width=innerWidth;fc.height=innerHeight;const c=["#4169e1","#e0568a","#9b2a52","#eef1ff","#9db3ff"];
+for(let i=0;i<110;i++){const a=Math.random()*Math.PI*2,v=3+Math.random()*9;ps.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-5,s:5+Math.random()*7,c:c[i%5],l:110})}
+if(!frun){frun=true;(function f(){fx.clearRect(0,0,fc.width,fc.height);ps=ps.filter(p=>p.l>0);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.3;p.vx*=.99;p.l--;fx.globalAlpha=Math.min(1,p.l/30);fx.fillStyle=p.c;fx.fillRect(p.x,p.y,p.s,p.s)});fx.globalAlpha=1;ps.length?requestAnimationFrame(f):(frun=false,fx.clearRect(0,0,fc.width,fc.height))})()}}
+
+/* cake */
+function blow(){const c=$("#cake");if(c.classList.contains("out"))return;c.classList.add("out");
+$("#wish").textContent="Wish made. May every single one come true, Pagal.";const r=c.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height*.2)}
+$("#blow").onclick=blow;$("#cake").onclick=blow;$("#cake").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();blow()}};
+
+/* countdown, typing, terminal */
+const target=new Date("2027-04-22T00:00:00+05:30").getTime();
+function tick(){let d=target-Date.now();const b=$("#count");
+if(d<=0){b.innerHTML="<div><strong>Today!</strong><small>It is your day</small></div>";return}
+b.innerHTML=[["days",864e5],["hours",36e5],["min",6e4],["sec",1e3]].map(([l,m])=>{const v=Math.floor(d/m);d-=v*m;return `<div><strong>${String(v).padStart(2,"0")}</strong><small>${l}</small></div>`}).join("")}
+function typeIt(el,txt){if(RM){el.textContent=txt;return}let i=0;(function n(){el.textContent=txt.slice(0,i++);if(i<=txt.length)setTimeout(n,34)})()}
+const out=$("#out"),cin=$("#cin");
+const say=(t,c)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=t;out.appendChild(d);out.scrollTop=out.scrollHeight};
+const cmds={help:()=>"Try: whoami, date, memories, rain, ls, cat rain.log, sudo bestfriend, clear",
+whoami:()=>"Pagal. Cyber security student. Hacker, dreamer, and the best kind of best friend.",
+date:()=>{const n=Math.ceil((target-Date.now())/864e5);return n>0?`${n} days to go: Thursday, 22 April 2027.`:"It’s your birthday!"},
+memories:()=>"19/09/2025 seminar | 30/01/2026 book fair | 24/03/2026 shuttle | one rainy day, soaked and happy",
+rain:()=>"Scanning... one rainy day logged. Status: unforgettable.",
+ls:()=>"message.txt  rain.log  secrets/","cat rain.log":()=>"[date unknown] weather: rain | mood: happy | status: unforgettable",
+"sudo bestfriend":()=>"[sudo] password accepted. Permission granted: forever.",clear:()=>{out.innerHTML="";return null}};
+cin.onkeydown=e=>{if(e.key!=="Enter")return;const v=cin.value.trim().toLowerCase();cin.value="";if(!v)return;say("$ "+v,"c");const f=cmds[v];if(f){const r=f();if(r)say(r)}else say(`command not found: ${v}. Try help.`)};
+
+function bootSeq(){if(RM)return 0;const b=$("#boot"),l=$("#bl");b.hidden=false;l.textContent="";
+  ["> access granted","> loading 19 Sep 2025 ... ok","> loading 30 Jan 2026 ... ok","> loading one rainy day ... ok","> loading 151 days of planning ... ok","> hello, Pagal."].forEach((t,i)=>setTimeout(()=>{l.textContent+=t+"\n"},i*520));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#pb").style.width="100%"}));
+  const end=()=>{b.hidden=true};b.onclick=end;setTimeout(end,3500);return 3500}
+function start(){
+  const BT=bootSeq();hsz();esz();tick();setInterval(tick,1000);say("Welcome back, Pagal. Type help.");
+  setTimeout(()=>typeIt($("#sub"),"This little world has been in the making for 151 days, just for you. Take your time, and scroll slowly."),BT);
+  new IntersectionObserver(e=>vis=e[0].isIntersecting).observe($(".hero"));
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.25});
+  [["11111,10001,10101,10001,11111","Deep Focus","Do not disturb: genius at work."],["01110,10001,11111,11011,11111","Cyber Brain","Breaks into things, only to keep them safe."],["01010,01010,00000,10001,01110","Real Friend","Always there, no explanation needed."],["10101,10101,11111,11111,11111","Birthday Boss","22 April 2027. Today the world is yours."]].forEach(([g,t,d])=>{const e=document.createElement("div");e.className="bd rv";e.innerHTML=`<div class="ic" aria-hidden="true">${g.replace(/,/g,"").split("").map(c=>`<i class="${c=="1"?"on":""}"></i>`).join("")}</div><h3>${t}</h3><p>${d}</p>`;$("#badges").appendChild(e)});
+  document.querySelectorAll(".ev,.rv").forEach(x=>io.observe(x));
+  let bv=false;new IntersectionObserver(e=>bv=e[0].isIntersecting).observe(ec);
+  addEventListener("resize",()=>{hsz();esz()});
+  const lp=[...document.querySelectorAll(".letter p")];lp.forEach(p=>p.classList.add("lp"));
+  new IntersectionObserver((e,o)=>{if(!e[0].isIntersecting)return;o.disconnect();let t=0;lp.forEach(p=>{setTimeout(()=>p.classList.add("on"),t);t+=500+p.textContent.length*14})},{threshold:.12}).observe($(".letter"));
+  $(".letter").onclick=()=>lp.forEach(p=>p.classList.add("on"));
+  if(RM){world();beat();return}
+  (function L(){T++;if(vis)world();if(bv)beat();requestAnimationFrame(L)})()
+}
+</script>
+</body>
+</html>
